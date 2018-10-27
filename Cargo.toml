@@ -1,0 +1,11 @@
+[package]
+name = "jacopone"
+version = "0.1.0"
+authors = ["zeegomo <g.pasini98@gmail.com>"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+description = "Jacopone implementation in Rust"
+
+[dependencies]
+rust-crypto = "0.2.36"
+crossbeam = "0.4.1"
