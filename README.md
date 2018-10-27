@@ -1,4 +1,6 @@
 # jacopone-lib
+[![Build Status](https://travis-ci.org/Zeegomo/jacopone-lib.svg?branch=master)](https://travis-ci.org/Zeegomo/jacopone-lib)
+
 Rust implementation of Jacopone encryption algorithm
 
 Jacopone is a block cipher designed by me, spoiler alert: **not safe**, i'm not able to do things that works
