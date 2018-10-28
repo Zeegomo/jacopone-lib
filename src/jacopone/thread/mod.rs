@@ -22,7 +22,7 @@ impl FinalThread {
 
 pub struct ParallelThread {
 	thread_count: u8,
-	parallel_interface: parallelinterface::ParallelInterface,
+	parallel_interface: parallelinterface::ParallelInterface<u8>,
 }
 
 impl ParallelThread {
