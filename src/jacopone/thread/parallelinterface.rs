@@ -24,7 +24,10 @@ impl<T> ParallelInterface<T> {
 		mpsc::Sender::clone(&self.tx[n as usize])
 	}
 
-	//pub fn send(n: u8, )
+	pub fn send(&self, n: usize, data: Vec<T>) {
+		assert!(n < self.tx.len());
+		self.tx[n].send(data).unwrap();
+	}
 	
 	pub fn concat(&self, active_threads: u8) -> Vec<T>  where T: Clone{
 		let mut blocks = Vec::new();

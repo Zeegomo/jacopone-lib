@@ -16,10 +16,13 @@ mod cipherdata;
 pub use self::jacopone::*;
 pub use self::cipherdata::*;
 
+
+
 #[cfg(test)]
 mod tests {
 	use crate::jacopone::*;
 	use crate::CipherData;
+
 
     #[test]
     fn check_decryption() {
@@ -73,4 +76,6 @@ mod tests {
         	}
     	}
     }
+
+    
 }
