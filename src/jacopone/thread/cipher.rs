@@ -2,21 +2,21 @@ use super::utils::*;
 use super::super::super::cipherdata::*;
 
 pub fn jacopone_encrypt_ctr(data: CipherData) -> Vec<u8> {
-    let mut c = data.counter;
+    let mut c = data.get_counter();
     let mut ciphertext = Vec::new();
-    for i in 0..data.message.len()/64 {
-        let block_counter = get_block_counter(&data.nonce, & mut c);
-        ciphertext.extend_from_slice(&xor(&block_encrypt(&block_counter, &data.key), &data.message[64 * i.. 64 * i + 64]));
+    for i in 0..data.get_message().len()/64 {
+        let block_counter = get_block_counter(data.get_nonce(), & mut c);
+        ciphertext.extend_from_slice(&xor(&block_encrypt(&block_counter, data.get_round_keys()), &data.get_message()[64 * i.. 64 * i + 64]));
     }
-    let block_counter = get_block_counter(&data.nonce, & mut c);
-    ciphertext.extend_from_slice(&xor(&data.message[(data.message.len()/64) * 64..], &block_encrypt(&block_counter, &data.key)));
+    let block_counter = get_block_counter(data.get_nonce(), & mut c);
+    ciphertext.extend_from_slice(&xor(&data.get_message()[(data.get_message().len()/64) * 64..], &block_encrypt(&block_counter, data.get_round_keys())));
     ciphertext
 }
 
-pub fn block_encrypt(message: &[u8], key: &[u8]) -> Vec<u8> {
+pub fn block_encrypt(message: &[u8], key: &Vec<Vec<u8>>) -> Vec<u8> {
     let mut ciphertext = message.clone().to_vec();
     for _i in 0..4 {
-        ciphertext = feistel_round(&ciphertext, key);
+        ciphertext = feistel_round(&ciphertext, &key[_i]);
         ciphertext = swap(&ciphertext);
     }
     ciphertext

@@ -1,6 +1,8 @@
 mod thread;
 use self::thread::{ParallelThread, FinalThread};
+pub use self::thread::hash;
 use super::cipherdata::*;
+
 
 ///enviroment for encryption and decryption
 pub struct Jacopone{

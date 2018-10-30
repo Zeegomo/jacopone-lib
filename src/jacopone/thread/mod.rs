@@ -3,6 +3,7 @@ mod cipher;
 mod utils;
 
 use super::super::cipherdata::*;
+pub use self::utils::hash;
 use self::utils::*;
 use self::cipher::*;
 
@@ -13,9 +14,9 @@ pub struct FinalThread {
 
 impl FinalThread {
 	pub fn finalize_encryption(data: CipherData) -> Vec<u8> {
-		let mut c = data.counter + (data.message.len()/64) as u64;
-        let block_counter = get_block_counter(&(data.nonce), & mut c);
-        xor(&(data.message[data.message.len()/64 * 64..]), &block_encrypt(&block_counter, &(data.key)))
+		let mut c = data.get_counter() + (data.get_message().len()/64) as u64;
+        let block_counter = get_block_counter(data.get_nonce(), & mut c);
+        xor(&(data.get_message()[data.get_message().len()/64 * 64..]), &block_encrypt(&block_counter, data.get_round_keys()))
 	}
 }
 
@@ -33,7 +34,7 @@ impl ParallelThread {
 	}
 
 	pub fn encrypt(&self, data: CipherData) -> Vec<u8> {
-		let blocks_index = get_thread_blocks(data.message.len(), self.thread_count);
+		let blocks_index = get_thread_blocks(data.get_message().len(), self.thread_count);
     	self.spawn_threads(data, &blocks_index);
     	self.parallel_interface.concat(blocks_index.len() as u8)
 	}
