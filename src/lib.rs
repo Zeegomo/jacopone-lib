@@ -56,7 +56,7 @@ mod tests {
         ];
 
         let counter = vec![5432452,5,441234,1234,1234,23452,0,2345,4325,234,52,345,1234,5123,5,658,569,706,784,56,343,4,52,346769879,434352345,2345234,534];
-        let jacopone = Jacopone::new(0);
+        let jacopone = Jacopone::new(4);
         for i in 0..message.len() {
         	for j in 0..nonce.len(){
         		for h in 0..key.len(){
