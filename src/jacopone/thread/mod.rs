@@ -9,14 +9,22 @@ use self::cipher::*;
 
 
 pub struct FinalThread {
-
+    thread_count: u8,
 }
 
 impl FinalThread {
-	pub fn finalize_encryption(data: CipherData) -> Vec<u8> {
-		let mut c = data.get_counter() + (data.get_message().len()/64) as u64;
-        let block_counter = get_block_counter(data.get_nonce(), & mut c);
-        xor(&(data.get_message()[data.get_message().len()/64 * 64..]), &block_encrypt(&block_counter, data.get_round_keys()))
+    pub fn new(thread_count: u8) -> FinalThread{
+        FinalThread{thread_count: thread_count}
+    }
+
+	pub fn finalize_encryption(&self, data: CipherData) -> Vec<u8> {
+        if self.thread_count > 0 {
+    		let mut c = data.get_counter() + (data.get_message().len()/64) as u64;
+            let block_counter = get_block_counter(data.get_nonce(), & mut c);
+            xor(&(data.get_message()[data.get_message().len()/64 * 64..]), &block_encrypt(&block_counter, data.get_round_keys()))
+        } else {
+            jacopone_encrypt_ctr(data)
+        }
 	}
 }
 
