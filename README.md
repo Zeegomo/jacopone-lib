@@ -4,6 +4,7 @@
 
 Rust implementation of Jacopone encryption algorithm
 
+### Jacopone
 Jacopone is a block cipher designed by me, spoiler alert: **not safe**
 
 Jacopone is based on a 4-round Feistel network with Sha3 as round function. The block size is 256 bits and the 
