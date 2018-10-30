@@ -1,5 +1,6 @@
 # jacopone-lib
-[![Build Status](https://travis-ci.org/Zeegomo/jacopone-lib.svg?branch=master)](https://travis-ci.org/Zeegomo/jacopone-lib)
+master: [![Build Status](https://travis-ci.org/Zeegomo/jacopone-lib.svg?branch=master)](https://travis-ci.org/Zeegomo/jacopone-lib)
+develop: [![Build Status](https://travis-ci.org/Zeegomo/jacopone-lib.svg?branch=develop)](https://travis-ci.org/Zeegomo/jacopone-lib)
 
 Rust implementation of Jacopone encryption algorithm
 
