@@ -1,7 +1,7 @@
 
 //! Jacopone
 //!
-//!	'jacopone' contains tools for encryption and decryption using Jacopone algorithm
+//!	`jacopone` contains tools for encryption and decryption using Jacopone algorithm
 //!
 //!
 //!
@@ -23,6 +23,7 @@ mod tests {
 	use crate::jacopone::*;
 	use crate::CipherData;
 
+    
 
     #[test]
     fn check_decryption() {
@@ -76,6 +77,8 @@ mod tests {
         	}
     	}
     }
+
+    
 
     
 }

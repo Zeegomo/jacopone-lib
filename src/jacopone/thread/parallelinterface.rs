@@ -9,8 +9,8 @@ pub struct ParallelInterface<T> {
 impl<T> ParallelInterface<T> {
 
 	pub fn new(n: u8) -> ParallelInterface<T>{
-		let mut tx = Vec::new();
-		let mut rx = Vec::new();
+		let mut tx = Vec::with_capacity(n as usize);
+		let mut rx = Vec::with_capacity(n as usize);
 		for _i in 0..n {
         	let (tx1, rx1) = mpsc::channel();
         	tx.push(tx1);
@@ -30,11 +30,11 @@ impl<T> ParallelInterface<T> {
 	}
 	
 	pub fn concat(&self, active_threads: u8) -> Vec<T>  where T: Clone{
-		let mut blocks = Vec::new();
+		let mut blocks = Vec::with_capacity(64);
     	for i in 0..active_threads as usize {
             blocks.push(self.rx[i].recv().unwrap()); 
     	}
-    	let mut ciphertext = Vec::new();
+    	let mut ciphertext = Vec::with_capacity(64);
     	for i in 0..active_threads as usize {
             ciphertext.extend_from_slice(&blocks[i]);
     	}

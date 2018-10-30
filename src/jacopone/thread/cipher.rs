@@ -3,7 +3,7 @@ use super::super::super::cipherdata::*;
 
 pub fn jacopone_encrypt_ctr(data: CipherData) -> Vec<u8> {
     let mut c = data.get_counter();
-    let mut ciphertext = Vec::new();
+    let mut ciphertext = Vec::with_capacity(data.get_message().len());
     for i in 0..data.get_message().len()/64 {
         let block_counter = get_block_counter(data.get_nonce(), & mut c);
         ciphertext.extend_from_slice(&xor(&block_encrypt(&block_counter, data.get_round_keys()), &data.get_message()[64 * i.. 64 * i + 64]));
@@ -33,7 +33,7 @@ pub fn feistel_round(block: &[u8], key: &[u8]) -> Vec<u8> {
 
 
 pub fn get_block_counter(nonce: &[u8], counter: & mut u64) -> Vec<u8> {
-    let mut n = nonce.clone().to_vec();
+    let mut n = nonce.to_vec();
     n.extend_from_slice(&(to_bytes(*counter)));
     *counter = (*counter).wrapping_add(1);
     n  

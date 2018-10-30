@@ -12,7 +12,7 @@ pub fn to_bytes(n: u64) -> Vec<u8> {
 }
 
 pub fn hex_to_bytes(string: &str) -> Vec<u8> {
-    let mut bytes = Vec::new();
+    let mut bytes = Vec::with_capacity(string.len()/2);
     for i in 0..(string.len() / 2) {
         match u8::from_str_radix(&string[2 * i.. 2 * i + 2], 16) {
             Ok(n) => bytes.push(n),
