@@ -41,3 +41,16 @@ pub fn hash(block: &[u8], key: &[u8]) -> Vec<u8> {
     hasher.input(&round_block);
     hex_to_bytes(&hasher.result_str())
 }
+
+#[cfg(test)]
+mod test{
+    use super::*;
+    #[test]
+    fn test_to_bytes(){
+        assert_eq!(vec![1,0,0,0], to_bytes(1));
+        assert_eq!(vec![0,1,0,0], to_bytes(256), "{:?}, {:?}", vec![1,1,0,0], to_bytes(256));
+        assert_eq!(vec![0,0,2,1], to_bytes(16908288), "{:?}, {:?}", vec![1,1,0,0], to_bytes(256));
+        assert_eq!(vec![255,255,255,255], to_bytes(4294967295), "{:?}, {:?}", vec![1,1,0,0], to_bytes(256));
+    }
+
+}
