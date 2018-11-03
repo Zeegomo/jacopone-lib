@@ -8,3 +8,4 @@ description = "Jacopone implementation in Rust"
 [dependencies]
 rust-crypto = "0.2.36"
 crossbeam = "0.4.1"
+crunchy = "0.2.1"
