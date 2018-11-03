@@ -39,8 +39,8 @@ impl CipherData {
     }
     
     fn generate_round_keys(key: &[u8]) -> Vec<Vec<u8>> {
-        vec![hash(key, "11".as_bytes()), hash(key, "22".as_bytes()),
-            hash(key, "33".as_bytes()), hash(key, "44".as_bytes())]
+        vec![hash(key, &key[0..8]), hash(key, &key[8..16]),
+            hash(key, &key[16..24]), hash(key, &key[24..32])]
     }
 
     pub fn get_message(&self) -> &Arc<Vec<u8>> {
