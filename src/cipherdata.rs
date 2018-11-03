@@ -7,6 +7,8 @@ pub struct CipherData{
     nonce: Arc<Vec<u8>>,
     counter: u64,
     round_keys: Arc<Vec<Vec<u8> > >,
+    start : usize,
+    end: usize,
 }
 
 impl CipherData {
@@ -15,23 +17,24 @@ impl CipherData {
     pub fn new (message: Vec<u8>, key: Vec<u8>, nonce: Vec<u8>, counter: u64) -> CipherData {
         assert_eq!(nonce.len(), 60, "invalid nonce len: {}. required: {}",nonce.len(), 60);
         assert_eq!(key.len(), 32, "invalid key len: {}. required: {}", key.len(), 32);
+        let len = message.len();
         let round_keys = CipherData::generate_round_keys(&key);
         CipherData {message: Arc::new(message), key: Arc::new(key),
-            nonce: Arc::new(nonce), counter: counter ,round_keys: Arc::new(round_keys)}
+            nonce: Arc::new(nonce), counter: counter ,round_keys: Arc::new(round_keys), start: 0, end: len}
     }
 
     ///Clone the references
     pub fn clone(other: &CipherData) -> CipherData {
         CipherData {message: Arc::clone(&other.message), key: Arc::clone(&other.key),
-            nonce: Arc::clone(&other.nonce), counter: other.counter, round_keys: Arc::clone(&other.round_keys)}
+            nonce: Arc::clone(&other.nonce), counter: other.counter, round_keys: Arc::clone(&other.round_keys), start: other.start, end: other.end}
     }
 
 
     ///Return references to portions of original message and different counter. New message is a reference from start to end blocks of other.message
     /// while new counter is equals to other.counter incremented by end
-    pub fn clone_slice(other: &CipherData, start: usize, end: usize) -> CipherData {
-        CipherData {message: Arc::new(other.message[start * 64 .. end * 64].to_vec()), key: Arc::clone(&other.key), 
-            nonce: Arc::clone(&other.nonce), counter: other.counter + start as u64, round_keys: Arc::clone(&other.round_keys)}
+    pub fn clone_slice(other: &CipherData, s: usize, e: usize) -> CipherData {
+        CipherData {message: Arc::clone(&other.message), key: Arc::clone(&other.key), 
+            nonce: Arc::clone(&other.nonce), counter: other.counter + s as u64, round_keys: Arc::clone(&other.round_keys), start: s * 64, end: e * 64}
  
     }
     
@@ -54,6 +57,14 @@ impl CipherData {
 
     pub fn get_counter(&self) -> u64 {
         self.counter
+    }
+
+    pub fn get_start(&self) -> usize {
+        self.start
+    }
+
+    pub fn get_blocks_len(&self) -> usize {
+        (self.end - self.start)/64
     }
 
     pub fn get_round_keys(&self) -> &Arc<Vec<Vec<u8>>>{

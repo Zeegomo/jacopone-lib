@@ -4,15 +4,13 @@ use super::super::super::cipherdata::*;
 pub fn jacopone_encrypt_ctr(data: CipherData) -> Vec<u8> {
     let mut c = data.get_counter();
     let mut ciphertext = Vec::with_capacity(data.get_message().len());
-    
-    for i in 0..data.get_message().len()/64 {
+    let start = data.get_start();
+    for i in 0..data.get_blocks_len() {
         let block_counter = get_block_counter(data.get_nonce(), & mut c);
-        ciphertext.extend_from_slice(&xor(&block_encrypt(&block_counter, data.get_round_keys()), &data.get_message()[64 * i.. 64 * i + 64]));
+        ciphertext.extend_from_slice(&xor(&block_encrypt(&block_counter, data.get_round_keys()), &data.get_message()[64 * i + start.. 64 * i + 64 + start]));
     }
-
-
-    let block_counter = get_block_counter(data.get_nonce(), & mut c);
-    ciphertext.extend_from_slice(&xor(&data.get_message()[(data.get_message().len()/64) * 64..], &block_encrypt(&block_counter, data.get_round_keys())));
+    //let block_counter = get_block_counter(data.get_nonce(), & mut c);
+    //ciphertext.extend_from_slice(&xor(&data.get_message()[(data.get_message().len()/64) * 64..], &block_encrypt(&block_counter, data.get_round_keys())));
     ciphertext
 }
 
