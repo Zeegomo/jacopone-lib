@@ -6,7 +6,8 @@
 //!
 //!
 //!
-
+#[macro_use]
+extern crate crunchy;
 extern crate crypto;
 extern crate crossbeam;
 

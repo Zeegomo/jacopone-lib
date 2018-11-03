@@ -28,13 +28,13 @@ impl CipherData {
 
 
     ///Return references to portions of original message and different counter. New message is a reference from start to end blocks of other.message
-    /// while new counter is incremented by end
+    /// while new counter is equals to other.counter incremented by end
     pub fn clone_slice(other: &CipherData, start: usize, end: usize) -> CipherData {
         CipherData {message: Arc::new(other.message[start * 64 .. end * 64].to_vec()), key: Arc::clone(&other.key), 
             nonce: Arc::clone(&other.nonce), counter: other.counter + start as u64, round_keys: Arc::clone(&other.round_keys)}
  
     }
-
+    
     fn generate_round_keys(key: &[u8]) -> Vec<Vec<u8>> {
         vec![hash(key, "11".as_bytes()), hash(key, "22".as_bytes()),
             hash(key, "33".as_bytes()), hash(key, "44".as_bytes())]
