@@ -1,8 +1,10 @@
 mod cipher_mode;
 mod feistel;
 mod jacopone;
+mod padding;
 mod utils;
 
 pub use self::jacopone::*;
-pub use cipher_mode::ModeCTR;
-pub use feistel::{Dummy, Sha2, Sha3};
+pub use cipher_mode::{CipherMode, Mode};
+pub use feistel::{Function, KeyScheduler, RoundFunction, Scheduler};
+pub use padding::{Padder, Padding};

@@ -2,25 +2,29 @@ use super::RoundFunction;
 use crate::utils::xor;
 use crunchy::unroll;
 
-pub const NUM_ROUNDS: usize = 4;
+pub const NUM_ROUNDS: usize = 14;
 pub const BLOCK_SIZE: usize = 64;
 pub const KEY_SIZE: usize = 32;
 
-pub fn block_encrypt<R: RoundFunction>(message: &mut [u8], key: &[[u8; KEY_SIZE]; NUM_ROUNDS]) {
+pub fn block_encrypt<R: RoundFunction>(
+    message: &mut [u8],
+    key: &[[u8; KEY_SIZE]; NUM_ROUNDS],
+    function: R,
+) {
     assert_eq!(message.len(), BLOCK_SIZE);
 
     unroll! {
         // using literal to unroll
-        for i in 0..4 {
-            feistel_round::<R>(message, &key[i]);
+        for i in 0..14 {
+            feistel_round(message, &key[i], function);
             swap(message);
         }
     }
 }
 
-fn feistel_round<R: RoundFunction>(block: &mut [u8], key: &[u8; KEY_SIZE]) {
+fn feistel_round<R: RoundFunction>(block: &mut [u8], key: &[u8; KEY_SIZE], function: R) {
     let (left, right) = block.split_at_mut(BLOCK_SIZE / 2);
-    xor(left, R::apply(right, key).as_ref());
+    xor(left, function.apply(right, key).as_ref());
 }
 
 fn swap(block: &mut [u8]) {

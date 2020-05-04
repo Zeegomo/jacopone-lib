@@ -1,34 +1,46 @@
-use crate::cipher_mode::{CipherMode, ModeCTR};
-use crate::feistel::{Dummy, KeyScheduler, RoundFunction, Sha3, KEY_SIZE};
-use std::marker::PhantomData;
+use crate::cipher_mode::CipherMode;
+use crate::feistel::{KeyScheduler, RoundFunction, KEY_SIZE};
+use crate::padding::Padder;
 
-pub struct Jacopone<C: CipherMode<R, K>, R: RoundFunction, K: KeyScheduler> {
-    _marker: PhantomData<(C, R, K)>,
+pub struct Jacopone<C: CipherMode<R, K, P>, R: RoundFunction, K: KeyScheduler, P: Padder> {
+    mode: C,
+    function: R,
+    key_scheduler: K,
+    padder: P,
 }
 
-impl Jacopone<ModeCTR, Sha3, Dummy> {
-    pub fn default() -> Self {
+impl<C: CipherMode<R, K, P>, R: RoundFunction, K: KeyScheduler, P: Padder> Jacopone<C, R, K, P> {
+    pub fn new(mode: C, function: R, key_scheduler: K, padder: P) -> Self {
         Jacopone {
-            _marker: PhantomData::<(ModeCTR, Sha3, Dummy)>,
+            mode,
+            function,
+            key_scheduler,
+            padder,
         }
     }
 }
 
-impl<C: CipherMode<R, K>, R: RoundFunction, K: KeyScheduler> Jacopone<C, R, K> {
-    pub fn new() -> Self {
-        Jacopone {
-            _marker: PhantomData::<(C, R, K)>,
-        }
-    }
-}
-
-impl<C: CipherMode<R, K>, R: RoundFunction, K: KeyScheduler> Jacopone<C, R, K> {
-    pub fn encrypt(&self, message: &mut [u8], key: &[u8], nonce: &[u8]) {
+impl<C: CipherMode<R, K, P>, R: RoundFunction, K: KeyScheduler, P: Padder> Jacopone<C, R, K, P> {
+    pub fn encrypt(&self, message: &mut Vec<u8>, key: &[u8], nonce: Option<&[u8]>) {
         assert_eq!(key.len(), KEY_SIZE);
-        C::encrypt(message, key, nonce);
+        self.mode.encrypt(
+            message,
+            key,
+            nonce,
+            self.function,
+            self.key_scheduler,
+            self.padder,
+        );
     }
-    pub fn decrypt(&self, ciphertext: &mut [u8], key: &[u8], nonce: &[u8]) {
+    pub fn decrypt(&self, ciphertext: &mut Vec<u8>, key: &[u8], nonce: Option<&[u8]>) {
         assert_eq!(key.len(), KEY_SIZE);
-        C::decrypt(ciphertext, key, nonce);
+        self.mode.decrypt(
+            ciphertext,
+            key,
+            nonce,
+            self.function,
+            self.key_scheduler,
+            self.padder,
+        );
     }
 }
