@@ -26,7 +26,7 @@ impl PKCS7 {
     fn pad(message: &mut Vec<u8>, len: u8) {
         let pl = len as usize - message.len() % len as usize;
 
-        message.extend(repeat(pl as u8).take(len as usize));
+        message.extend(repeat(pl as u8).take(pl as usize));
     }
 
     fn unpad(message: &mut Vec<u8>) {
