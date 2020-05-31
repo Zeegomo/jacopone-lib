@@ -2,6 +2,7 @@ use crate::feistel::{block_encrypt, KeyScheduler, RoundFunction, BLOCK_SIZE};
 use crate::padding::Padder;
 use crate::utils::{sha3_512, xor};
 
+// Represents Block Cipher Mode
 pub trait CipherMode<R: RoundFunction, K: KeyScheduler, P: Padder> {
     fn encrypt(
         &self,

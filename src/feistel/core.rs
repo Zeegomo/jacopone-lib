@@ -2,7 +2,7 @@ use super::RoundFunction;
 use crate::utils::xor;
 use crunchy::unroll;
 
-pub const NUM_ROUNDS: usize = 14;
+pub const NUM_ROUNDS: usize = 8;
 pub const BLOCK_SIZE: usize = 64;
 pub const KEY_SIZE: usize = 32;
 
@@ -15,7 +15,7 @@ pub fn block_encrypt<R: RoundFunction>(
 
     unroll! {
         // using literal to unroll
-        for i in 0..14 {
+        for i in 0..8 {
             feistel_round(message, &key[i], function);
             swap(message);
         }
