@@ -20,6 +20,7 @@ pub fn block_encrypt<R: RoundFunction>(
             swap(message);
         }
     }
+    swap(message);
 }
 
 fn feistel_round<R: RoundFunction>(block: &mut [u8], key: &[u8; KEY_SIZE], function: R) {

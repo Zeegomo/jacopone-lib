@@ -143,7 +143,6 @@ impl ModeECB {
         if rev {
             round_keys.reverse();
         }
-
         message
             .chunks_mut(BLOCK_SIZE)
             .for_each(|chunk| block_encrypt(chunk, &round_keys, function));
@@ -172,5 +171,37 @@ impl ModeECB {
         assert!(nonce.is_none(), "Nonce is not supported in ECB mode");
         Self::simmetric(message, key, true, function, ks);
         padder.unpad(message);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    use utils::*;
+
+    #[test]
+    fn test_ecb() {
+        let mut message = "verylongmessageverylongmessageverylongmessageverylongmessageverylongmessageverylongmessage".as_bytes().to_vec();
+        let copy = message.clone();
+        let key = sha3_256("key".as_bytes());
+        let jacopone = Jacopone::new(Mode::ECB, Function::Sha3, Scheduler::PBKDF, Padding::PKCS7);
+
+        jacopone.encrypt(&mut message, &key, None);
+        jacopone.decrypt(&mut message, &key, None);
+
+        assert_eq!(message, copy);
+    }
+
+    #[test]
+    fn test_ctr() {
+        let mut message = "verylongmessageverylongmessageverylongmessageverylongmessageverylongmessageverylongmessage".as_bytes().to_vec();
+        let copy = message.clone();
+        let key = sha3_256("key".as_bytes());
+        let jacopone = Jacopone::new(Mode::CTR, Function::Sha3, Scheduler::PBKDF, Padding::PKCS7);
+
+        jacopone.encrypt(&mut message, &key, Some(&[7; 32]));
+        jacopone.decrypt(&mut message, &key, Some(&[7; 32]));
+
+        assert_eq!(message, copy);
     }
 }
